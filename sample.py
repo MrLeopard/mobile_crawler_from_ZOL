@@ -12,11 +12,23 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-def zol_spyder(year):
+urls = {
+        '2021': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8975_1_1_0_1.html',
+        '2020': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8379_1_1_0_1.html',
+        '2019': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8010_1_1_0_1.html',
+        '2018': u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s7500_1_1_0_1.html",
+        '2017': u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s7235_1_1_0_1.html",
+        '2016': u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s6472_1_1_0_1.html",
+        '2015': u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s6132_1_1_0_1.html",
+        '2014': u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s5359_1_1_0_1.html"
+    }
+
+
+def zol_spider(year):
 
     wb_name = '%s.xls' %year
     wb = xlwt.Workbook(encoding="utf-8")
-    sheet = wb.add_sheet("2019")
+    sheet = wb.add_sheet("datas")
 
     titles = ["机型", '价格', '4G网络', "屏幕", "CPU", "主频", "电池", "主摄像头", "操作系统", "RAM", "ROM"]
 
@@ -39,15 +51,6 @@ def zol_spyder(year):
     wb.save(wb_name)
 
     rows = 1  #excle 行数索引
-
-    urls = {
-        2019: u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8010_1_1_0_1.html',
-        2018: u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s7500_1_1_0_1.html",
-        2017: u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s7235_1_1_0_1.html",
-        2016: u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s6472_1_1_0_1.html",
-        2015: u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s6132_1_1_0_1.html",
-        2014: u"http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s5359_1_1_0_1.html"
-    }
 
     head = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'}
@@ -125,4 +128,11 @@ def zol_spyder(year):
 
 
 if __name__ == "__main__":
-    zol_spyder(2019)
+    # zol_spider(2019)
+    if len(sys.argv) <= 1:
+        zol_spider("2021")
+    elif sys.argv[1] in urls.keys():
+        zol_spider(sys.argv[1])
+    else:
+        print(repr(sys.argv[1]))
+        print('wrong argument, only support [2016-2021]')
