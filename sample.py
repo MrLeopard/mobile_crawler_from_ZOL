@@ -13,6 +13,8 @@ sys.setdefaultencoding('utf-8')
 
 
 urls = {
+        '2023': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s10086_1_1_0_1.html',
+        '2022': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s9277_1_1_0_1.html',
         '2021': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8975_1_1_0_1.html',
         '2020': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8379_1_1_0_1.html',
         '2019': u'http://detail.zol.com.cn/cell_phone_advSearch/subcate57_1_s8010_1_1_0_1.html',
@@ -30,7 +32,7 @@ def zol_spider(year):
     wb = xlwt.Workbook(encoding="utf-8")
     sheet = wb.add_sheet("datas")
 
-    titles = ["机型", '价格', '4G网络', "屏幕", "CPU", "主频", "电池", "主摄像头", "操作系统", "RAM", "ROM"]
+    titles = ["机型", '价格', '屏幕分辨率', "屏幕尺寸", "CPU", "主频", "电池", "主摄像头", "屏幕刷新", "RAM", "ROM"]
 
     par_index = {   #索引参数的列
         'name':0,
@@ -68,16 +70,16 @@ def zol_spider(year):
 
     if len(__pages) == 1:
         total_page = int(__pages[0])
-        print "Total pages: %s" % total_page
+        print("Total pages: %s" % total_page)
     else:
-        print 'get total pages failed.total %s' % len(__pages)
+        print('get total pages failed.total %s' % len(__pages))
         sys.exit(-1)
 
     # 生成所有待爬的网页
     url_templet = url.replace('1.html', '')
 
     for i in range(total_page):  # 遍历，开爬
-        print "page: ",i+1
+        print("page: ",i+1)
         per_url = "%s%s%s" % (url_templet, i + 1, ".html")
         req = Request(per_url, headers=head)
         response = urlopen(req)
@@ -98,9 +100,9 @@ def zol_spider(year):
             detals = phone_content.find_all("li")
             for i in detals:
 
-                if u'4G网络' in str(i):
+                if u'分辨率' in str(i):
                     sheet.write(rows,par_index['4g'],i["title"])
-                elif u'主屏尺寸' in str(i):
+                elif u'屏幕尺寸' in str(i):
                     sheet.write(rows, par_index['screen'], i["title"])
                 elif u'CPU型号' in str(i):
                     sheet.write(rows, par_index['cpu'], i["title"])
@@ -108,9 +110,9 @@ def zol_spider(year):
                     sheet.write(rows, par_index['hz'], i["title"])
                 elif u'电池容量' in str(i):
                     sheet.write(rows, par_index['bettery'], i["title"])
-                elif u'后置摄像' in str(i):
+                elif u'像素' in str(i):
                     sheet.write(rows, par_index['camera'], i["title"])
-                elif u'系统内核' in str(i):
+                elif u'屏幕刷新' in str(i):
                     sheet.write(rows, par_index['os'], i["title"])
                 elif u'RAM容量' in str(i):
                     sheet.write(rows, par_index['ram'], i["title"])
@@ -130,9 +132,9 @@ def zol_spider(year):
 if __name__ == "__main__":
     # zol_spider(2019)
     if len(sys.argv) <= 1:
-        zol_spider("2021")
+        zol_spider("2023")
     elif sys.argv[1] in urls.keys():
         zol_spider(sys.argv[1])
     else:
         print(repr(sys.argv[1]))
-        print('wrong argument, only support [2016-2021]')
+        print('wrong argument, only support {}'.format(urls.keys()))
